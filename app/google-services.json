@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "98320580134",
+    "project_id": "cocinapomodoro",
+    "storage_bucket": "cocinapomodoro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98320580134:android:d6f580697c235b92e4f0e7",
+        "android_client_info": {
+          "package_name": "com.example.cocinaapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZYFIvIJOrSBO2Y09CubcbcjECA9fm_Js"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

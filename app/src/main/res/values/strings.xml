@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">CocinaApp</string>
+    <string name="main_text">Learn how to cook and manage your time intuitively</string>
+    <string name="main_login">LOGIN</string>
+    <string name="main_signup">SIGNUP</string>
+
+    <!-- Login -->
+    <string name="login_welcome">Welcome Back!</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_forgot">Forgot password?</string>
+    <string name="login_dont">Don\'t have an accaunt?</string>
+    <string name="hint_email">example@gemail.com</string>
+    <string name="hint_password">password</string>
+    <string name="hint_signup">Sign Up</string>
+
+    <!-- SignUp -->
+    <string name="signup_welcome">Create your account</string>
+    <string name="signup_name">Name</string>
+    <string name="signup_already">Already have an account?</string>
+    <string name="hint_login">LogIn</string>
+    <string name="hint_name">Enter your name</string>
+
+
+    <!-- menu -->
+    <string name="menu_home">Home</string>
+    <string name="menu_recipies">Recipies</string>
+    <string name="menu_profile">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- Profile -->
+    <string name="prof_recipies">Your recipies</string>
+
+    <!-- Add recipies -->
+    <string name="add_name">Recipie\'s name</string>
+    <string name="add_hint_name">Enchiladas</string>
+    <string name="add_time">Elaboration time (mins)</string>
+    <string name="add_hint_time">120</string>
+
+</resources>
