@@ -25,5 +25,15 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="cornerRadius">15dp</item>
     </style>
+    
+    <style name="TextLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
+    </style>
+
+    <style name="TextBos" parent="ThemeOverlay.Material3.TextInputEditText">
+
+    </style>
+
+
+    <dimen name="edt_height">50dp</dimen>
 </resources>

@@ -89,28 +89,6 @@ class RecipiesRepo {
         }
     }
 
-    /*
-    suspend fun getShared(): List<String> {
-        auth = Firebase.auth
-        return withContext(Dispatchers.IO) {
-            val list:MutableList<String> = mutableListOf()
-            try {
-                firestore.collection("User_Recipies")
-                    .document(auth.uid.toString())
-                    .collection("recipies")
-                    .get()
-                    .await().forEach{
-                        if(it.getBoolean("shared") == true){
-                            list.add(it.id)
-                        }
-                    }
-                list
-            } catch (e: Exception) {
-                emptyList()
-            }
-        }
-    }*/
-
     fun getRecipie(id: String): LiveData<RecipiesModel> {
         val recipieLiveData = MutableLiveData<RecipiesModel>()
 
@@ -171,39 +149,6 @@ class RecipiesRepo {
             }
         }
     }
-
-    /*suspend fun isLiked(id: String): Boolean {
-        auth = Firebase.auth
-        var found = false
-        return withContext(Dispatchers.IO) {
-            try {
-                val doc = firestore.collection("User_Recipies")
-                    .document(auth.uid.toString())
-                    .collection("recipies")
-                    .document(id).get()
-                    .await()
-                doc.getBoolean("liked") ?: false
-            } catch (e: Exception) {
-                false
-            }
-        }
-    }*/
-
-    /*suspend fun isShared(id: String): Boolean {
-        auth = Firebase.auth
-        return withContext(Dispatchers.IO) {
-            try {
-                val doc = firestore.collection("User_Recipies")
-                    .document(auth.uid.toString())
-                    .collection("recipies")
-                    .document(id).get()
-                    .await()
-                doc.getBoolean("shared") ?: false
-            } catch (e: Exception) {
-                false
-            }
-        }
-    }*/
 
     suspend fun isShared(id:String): Boolean{
         auth = Firebase.auth?: return false
