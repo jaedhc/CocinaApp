@@ -29,8 +29,7 @@ class UserViewModel: ViewModel() {
     var userName: MutableLiveData<String> = MutableLiveData()
     var userPhoto: MutableLiveData<String> = MutableLiveData()
 
-    fun getUserData(){
-        auth = Firebase.auth
+    fun getUserData(id:String){
         val db = Firebase.firestore
         var usrname:String = ""
         var photo:String = ""
@@ -38,7 +37,7 @@ class UserViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try{
                 db.collection("Users")
-                    .document(auth.currentUser!!.uid)
+                    .document(id)
                     .get().addOnCompleteListener {
                         if(it.isSuccessful){
                             usrname = it.result.get("name").toString()

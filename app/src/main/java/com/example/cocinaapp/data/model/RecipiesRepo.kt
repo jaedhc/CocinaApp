@@ -41,8 +41,33 @@ class RecipiesRepo {
         return recipies
     }
 
-    fun getSharedOrOwned(): LiveData<List<RecipiesModel>> {
-        auth = Firebase.auth
+    fun getRecipiesByCat(category: String): LiveData<List<RecipiesModel>> {
+        val recipies = MutableLiveData<List<RecipiesModel>>()
+
+        firestore.collection("Recipies")
+            .whereEqualTo("category", category)
+            .addSnapshotListener { snapshot, exception ->
+
+            val recipiesList = mutableListOf<RecipiesModel>()
+
+            snapshot?.documents?.forEach {
+                val name = it.getString("name")
+                val photo = it.getString("photo")
+                val likes = it.get("likes").toString().toInt()
+                val time = it.get("time").toString().toInt()
+
+                val recipie = RecipiesModel(it.id, name!!, photo!!, likes, time)
+
+                recipiesList.add(recipie)
+            }
+
+            recipies.value = recipiesList
+        }
+        return recipies
+    }
+
+    fun getSharedOrOwned(id:String): LiveData<List<RecipiesModel>> {
+
         val recipies = MutableLiveData<List<RecipiesModel>>()
 
         firestore.collection("Recipies").get().addOnCompleteListener {
@@ -50,21 +75,36 @@ class RecipiesRepo {
                 it.result.documents.forEach { doc ->
 
                     CoroutineScope(Dispatchers.IO).launch {
+                        var found = false
+                        var shared = false
+                        val sharedList = async { getShared(id) }.await()
+                        val ownedList = async { getOwned(id) }.await()
+                        val list = mutableListOf<RecipiesModel>()
+                        var recipieList: List<RecipiesModel>
 
-                        val sharedList = async { getShared() }.await()
-                        val recipieList = it.result.documents.filter {
-                            sharedList.contains(it.get("recipieId").toString())
-                        }.map { doc2 ->
-                            val name = doc2.getString("name")
-                            val photo = doc2.getString("photo")
-                            val likes = doc2.get("likes").toString().toInt()
-                            val time = doc2.get("time").toString().toInt()
+                        it.result.documents.forEach {
+                            if(ownedList.contains(it.get("recipieId").toString())){
+                                found = true
+                                shared = false
+                            }else if(sharedList.contains(it.get("recipieId").toString())){
+                                found = true
+                                shared = true
+                            } else {
+                                found = false
+                                shared = false
+                            }
+                            if(found){
+                                val name = it.getString("name")
+                                val photo = it.getString("photo")
+                                val likes = it.get("likes").toString().toInt()
+                                val time = it.get("time").toString().toInt()
 
-                            RecipiesModel(doc2.id, name!!, photo!!, likes, time)
+                                list.add(RecipiesModel(it.id, name!!, photo!!, likes, time, shared = shared))
+                            }
                         }
 
                         withContext(Dispatchers.Main) {
-                            recipies.value = recipieList
+                            recipies.value = list
                         }
                     }
                 }
@@ -73,17 +113,32 @@ class RecipiesRepo {
         return recipies
     }
 
-    suspend fun getShared(): List<String>{
+    suspend fun getShared(id:String): List<String>{
         auth = Firebase.auth?: return emptyList()
 
         return withContext(Dispatchers.IO){
             try {
                 val doc = firestore.collection("Shared")
-                    .whereEqualTo("user_id", auth.uid)
+                    .whereEqualTo("user_id", id)
                     .get()
                     .await()
                 doc.map { it.get("recipie_id").toString() }
             }catch (e: Exception){
+                emptyList()
+            }
+        }
+    }
+
+    suspend fun getOwned(id:String): List<String>{
+        return withContext(Dispatchers.IO){
+            try {
+                val doc = firestore.collection("Recipies")
+                    .whereEqualTo("created_by.user_id", id)
+                    .get()
+                    .await()
+
+                doc.map { it.get("recipieId").toString() }
+            } catch (e: Exception){
                 emptyList()
             }
         }

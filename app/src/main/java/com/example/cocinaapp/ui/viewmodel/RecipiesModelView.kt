@@ -12,4 +12,8 @@ class RecipiesModelView: ViewModel() {
     fun getRecipies(): LiveData<List<RecipiesModel>>{
         return recipiesRepo.getRecipies()
     }
+
+    fun getRecipiesByCat(cat: String): LiveData<List<RecipiesModel>>{
+        return recipiesRepo.getRecipiesByCat(cat)
+    }
 }

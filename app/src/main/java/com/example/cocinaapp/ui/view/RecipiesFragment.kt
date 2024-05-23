@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
@@ -49,24 +50,38 @@ class RecipiesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_recipies, container, false)
-
         val recycler = view.findViewById<RecyclerView>(R.id.recipies_recycler)
+        val cat = arguments?.getString("category", null)
+        val txtFilter = view.findViewById<TextView>(R.id.txt_filter)
 
         recipiesModelView = ViewModelProvider(this).get(RecipiesModelView::class.java)
-
         recipiesAdapter = RecipiesAdapter()
 
-        recipiesModelView.getRecipies().observe(viewLifecycleOwner, Observer {
-            recipiesAdapter.setRecipieList(it)
+        if(cat == null){
+            txtFilter.text = "Filtered by: All"
+            recipiesModelView.getRecipies().observe(viewLifecycleOwner, Observer {
+                recipiesAdapter.setRecipieList(it)
 
-            recycler.apply {
-                layoutManager = LinearLayoutManager(this.context)
-                adapter = recipiesAdapter
-            }
+                recycler.apply {
+                    layoutManager = LinearLayoutManager(this.context)
+                    adapter = recipiesAdapter
+                }
 
-        })
+            })
+        } else {
+            txtFilter.text = "Filtered by: $cat"
+            recipiesModelView.getRecipiesByCat(cat).observe(viewLifecycleOwner, Observer {
+                recipiesAdapter.setRecipieList(it)
+
+                recycler.apply {
+                    layoutManager = LinearLayoutManager(this.context)
+                    adapter = recipiesAdapter
+                }
+
+            })
+        }
+
         val add = view.findViewById<CardView>(R.id.btnAdd)
-
         add.setOnClickListener {
             casosUsoAtivities.callAdd()
         }

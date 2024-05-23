@@ -18,7 +18,7 @@ import com.example.cocinaapp.databinding.ActivityHomeBinding
 import com.example.cocinaapp.ui.viewmodel.HomeViewModel
 import com.example.cocinaapp.ui.viewmodel.UserViewModel
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), CategoriesFragment.OnFragmentInteractionListener {
 
     private lateinit var binding: ActivityHomeBinding
 
@@ -92,5 +92,18 @@ class HomeActivity : AppCompatActivity() {
         }
 
         homeViewModel.getUserData()
+    }
+
+    override fun onFragmentAInteraction(value: String) {
+        val recipiesFragment = RecipiesFragment().apply {
+            arguments = Bundle().apply {
+                putString("category", value)
+            }
+        }
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_layout, recipiesFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

@@ -23,6 +23,9 @@ import com.example.cocinaapp.ui.viewmodel.HomeViewModel
 import com.example.cocinaapp.ui.viewmodel.ProfileViewModel
 import com.example.cocinaapp.ui.viewmodel.RecipiesModelView
 import com.example.cocinaapp.ui.viewmodel.UserViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import java.util.jar.Attributes.Name
 
 // TODO: Rename parameter arguments, choose names that match
@@ -42,6 +45,7 @@ class ProfileFragment : Fragment() {
 
     private lateinit var profilesModelView: ProfileViewModel
     private lateinit var recipiesAdapter: RecipiesAdapter
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +82,8 @@ class ProfileFragment : Fragment() {
         val name = preferences?.getString("name", "user")
         val photo = preferences?.getString("photo", "user")
 
+        auth = Firebase.auth
+
         val img = view.findViewById<ImageView>(R.id.usr_img)
         val nameTxt = view.findViewById<TextView>(R.id.txt_name)
         Glide.with(this)
@@ -93,7 +99,7 @@ class ProfileFragment : Fragment() {
 
         recipiesAdapter = RecipiesAdapter()
 
-        profilesModelView.getUserRecipies().observe(viewLifecycleOwner, Observer {
+        profilesModelView.getUserRecipies(auth.uid.toString()).observe(viewLifecycleOwner, Observer {
             recipiesAdapter.setRecipieList(it)
             recycler.apply {
                 layoutManager = LinearLayoutManager(this.context)

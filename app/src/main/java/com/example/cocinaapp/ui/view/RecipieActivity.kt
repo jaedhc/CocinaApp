@@ -1,5 +1,6 @@
 package com.example.cocinaapp.ui.view
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -43,7 +44,8 @@ class RecipieActivity : AppCompatActivity() {
                 binding.txtUser.text = it.user!!.get("user_name").toString()
                 binding.txtDuration.text ="${it.time.toString()} mins"
                 binding.txtTitle.text = it.name
-
+                val steps: List<*>? = it.steps
+                val userId = it.user.get("user_id").toString()
                 Glide.with(this)
                     .load(it.user.get("user_photo").toString())
                     .circleCrop()
@@ -83,6 +85,18 @@ class RecipieActivity : AppCompatActivity() {
                 } else {
                     binding.btnShare.setCardBackgroundColor(resources.getColor(R.color.white))
                     binding.imgShare.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.Priamry))
+                }
+
+                binding.imgUser.setOnClickListener {
+                    val intent = Intent(this, ViewProfileActivity::class.java)
+                    intent.putExtra("userId", userId)
+                    startActivity(intent)
+                }
+
+                binding.btnPrepare.setOnClickListener {
+                    val i = Intent(this, PomodoroActivity::class.java)
+                    i.putExtra("steps", steps as ArrayList)
+                    startActivity(i)
                 }
 
             })

@@ -19,6 +19,12 @@
         android:theme="@style/Theme.CocinaApp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.view.ViewProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.PomodoroActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.AddRecipieActivity"
             android:exported="false" />
         <activity

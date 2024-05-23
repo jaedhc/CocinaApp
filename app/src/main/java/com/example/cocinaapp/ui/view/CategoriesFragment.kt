@@ -10,12 +10,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.cocinaapp.R
 import com.example.cocinaapp.ui.viewmodel.HomeViewModel
 import com.example.cocinaapp.usecases.activities
+import java.lang.ClassCastException
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +38,20 @@ class CategoriesFragment : Fragment() {
 
     private val casosUsoAtivities by lazy { this.activity?.let { activities(it) } }
     private lateinit var homeViewModel: HomeViewModel
+    private var listener: OnFragmentInteractionListener? = null
+
+    interface OnFragmentInteractionListener {
+        fun onFragmentAInteraction(value:String)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if(context is OnFragmentInteractionListener){
+            listener = context
+        } else {
+            throw ClassCastException("$context must implement OnFragmentInteracionListener")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +75,8 @@ class CategoriesFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_categories, container, false)
 
+        initButtons(view)
+
         val img = view.findViewById<ImageView>(R.id.cat_usr_img)
 
         updated = false
@@ -70,6 +88,39 @@ class CategoriesFragment : Fragment() {
         updateUserInfo(view, updated)
 
         return view
+    }
+
+    fun initButtons(view: View){
+        val btnMexican = view.findViewById<CardView>(R.id.btn_mexican)
+        val btnPastas = view.findViewById<CardView>(R.id.btn_Pastas)
+        val btnAppetizers = view.findViewById<CardView>(R.id.btn_Appetizers)
+        val btnSide = view.findViewById<CardView>(R.id.btn_Side_Dishes)
+        val btnDesserts = view.findViewById<CardView>(R.id.btn_Desserts)
+        val btnBeverages = view.findViewById<CardView>(R.id.btn_Beverages)
+        val btnFast = view.findViewById<CardView>(R.id.btn_fastfood)
+
+        btnMexican.setOnClickListener {
+            listener?.onFragmentAInteraction("Mexican")
+        }
+
+        btnPastas.setOnClickListener {
+            listener?.onFragmentAInteraction("Pastas")
+        }
+        btnAppetizers.setOnClickListener {
+            listener?.onFragmentAInteraction("Appetizers")
+        }
+        btnSide.setOnClickListener {
+            listener?.onFragmentAInteraction("Side Dishes")
+        }
+        btnDesserts.setOnClickListener {
+            listener?.onFragmentAInteraction("Desserts")
+        }
+        btnBeverages.setOnClickListener {
+            listener?.onFragmentAInteraction("Beverages")
+        }
+        btnFast.setOnClickListener {
+            listener?.onFragmentAInteraction("Fast Food")
+        }
     }
 
     fun updateUserInfo(view: View, updated: Boolean){

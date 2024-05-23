@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.ContextThemeWrapper
+import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -63,6 +64,11 @@ class AddRecipieActivity : AppCompatActivity() {
         userNmae = sharedPreferences.getString("name", null)
         userPhoto = sharedPreferences.getString("photo", null)
 
+        val categories = resources.getStringArray(R.array.categories)
+        val arrayAdapter = ArrayAdapter(this, R.layout.dropdown_item, categories)
+
+        binding.dropdown.setAdapter(arrayAdapter)
+
         containerIngLayout = findViewById(R.id.ingredientsLayout)
         containerStpLayout = findViewById(R.id.stepsLayout)
 
@@ -108,7 +114,7 @@ class AddRecipieActivity : AppCompatActivity() {
     private fun getRecipie(): HashMap<String, Any> {
         val name = binding.edtName.text.toString()
         val time = binding.edtTime.text.toString().toInt()
-
+        val cat = binding.dropdown.text.toString()
         val steps = getSteps().toList()
         val ingredients =getIngredients().toList()
 
@@ -120,7 +126,7 @@ class AddRecipieActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         val map = hashMapOf<String, Any>(
-            "category" to "Comida Tradicional",
+            "category" to cat,
             "created_by" to hashMapOf<String, String>(
                 "user_id" to auth.uid.toString(),
                 "user_name" to userNmae!!,
@@ -129,7 +135,7 @@ class AddRecipieActivity : AppCompatActivity() {
             "ingredients" to ingredients,
             "likes" to 0,
             "steps" to steps,
-            "name" to name!!,
+            "name" to name,
             "recipieId" to recipieId,
             "time" to time,
             "photo" to imgUrl
@@ -143,6 +149,10 @@ class AddRecipieActivity : AppCompatActivity() {
         if(userNmae == null || userPhoto == null){
             Toast.makeText(this, "Error en la sesión", Toast.LENGTH_LONG).show()
             return false
+        }
+
+        if(binding.dropdown.text.toString().equals("")){
+
         }
 
         if(imgUri == null){

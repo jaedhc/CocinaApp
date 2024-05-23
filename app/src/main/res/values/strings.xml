@@ -33,10 +33,25 @@
     <!-- Profile -->
     <string name="prof_recipies">Your recipies</string>
 
+    <!-- View Profile -->
+    <string name="prof__view_recipies">Recipies</string>
+
     <!-- Add recipies -->
     <string name="add_name">Recipie\'s name</string>
     <string name="add_hint_name">Enchiladas</string>
     <string name="add_time">Elaboration time (mins)</string>
     <string name="add_hint_time">120</string>
+
+
+    <!-- Array categories -->
+    <string-array name="categories">
+        <item>Pastas</item>
+        <item>Appetizers</item>
+        <item>Side Dishes</item>
+        <item>Desserts</item>
+        <item>Beverages</item>
+        <item>Mexican</item>
+        <item>Fast Food</item>
+    </string-array>
 
 </resources>

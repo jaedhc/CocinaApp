@@ -206,6 +206,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_prepare"
                     style="@style/Button_Primary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,8 @@ class RecipiesAdapter: RecyclerView.Adapter<RecipiesHolder>() {
             listener?.onRecipieSelected(position, listOfRecipies)
         }
 
+        val shared = recipies.shared
+
         val name = recipies.name
         val photo = recipies.photo
         val likes = recipies.likes
@@ -48,6 +51,10 @@ class RecipiesAdapter: RecyclerView.Adapter<RecipiesHolder>() {
         Glide.with(holder.itemView.context)
             .load(photo)
             .into(holder.img)
+
+        if(shared){
+            holder.layout.visibility = View.VISIBLE
+        }
 
     }
 
@@ -72,4 +79,5 @@ class RecipiesHolder(itemView: View): ViewHolder(itemView){
     val recipie = itemView.findViewById<TextView>(R.id.txt_recipie_name)
     val likes = itemView.findViewById<TextView>(R.id.txt_likes)
     val mins = itemView.findViewById<TextView>(R.id.txt_mins)
+    val layout = itemView.findViewById<LinearLayout>(R.id.shared_layout)
 }
