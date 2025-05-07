@@ -1,12 +1,16 @@
 package com.example.cocinaapp.ui.view
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,11 +18,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Visibility
 import com.example.cocinaapp.R
 import com.example.cocinaapp.adapter.RecipiesAdapter
 import com.example.cocinaapp.data.model.RecipiesModel
 import com.example.cocinaapp.ui.viewmodel.RecipiesModelView
 import com.example.cocinaapp.usecases.activities
+import com.facebook.shimmer.ShimmerFrameLayout
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -54,50 +60,112 @@ class RecipiesFragment : Fragment() {
         val cat = arguments?.getString("category", null)
         val txtFilter = view.findViewById<TextView>(R.id.txt_filter)
 
+        val shimmerFrameLayout = view.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
+
+        val searchView = view.findViewById<SearchView>(R.id.search_view)
+        val searchEditText = searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+        val closeIcon = searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
+
+        // Añadir una receta
+        val add = view.findViewById<CardView>(R.id.btnAdd)
+
+        recycler.visibility = View.GONE
+        add.visibility = View.GONE
+        shimmerFrameLayout.startShimmer()
+
+
+        // Cambiar el color del texto y del hint
+        searchEditText.setHintTextColor(Color.BLACK)
+        searchEditText.setTextColor(Color.BLACK)
+        closeIcon.setColorFilter(Color.BLACK)
+
+        // Cambiar el color del icono de búsqueda
+        searchView.post {
+            val searchIcon = searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_mag_icon)
+            searchIcon.setColorFilter(Color.BLACK) // Cambiar el color del icono a negro
+        }
+
+        // Observando el modelo de datos
         recipiesModelView = ViewModelProvider(this).get(RecipiesModelView::class.java)
         recipiesAdapter = RecipiesAdapter()
 
-        if(cat == null){
+        // Filtrar recetas por categoría o por búsqueda
+        if (cat == null) {
             txtFilter.text = "Filtered by: All"
-            recipiesModelView.getRecipies().observe(viewLifecycleOwner, Observer {
-                recipiesAdapter.setRecipieList(it)
+            recipiesModelView.getRecipies().observe(viewLifecycleOwner, Observer { recipes ->
+                // Filtrar las recetas según el texto ingresado en el SearchView
+                val filteredRecipes = filterRecipesBySearchQuery(recipes, searchView.query.toString())
 
+                shimmerFrameLayout.stopShimmer()
+                shimmerFrameLayout.visibility = View.GONE
+                recycler.visibility = View.VISIBLE
+                add.visibility = View.VISIBLE
+
+                recipiesAdapter.setRecipieList(filteredRecipes)
                 recycler.apply {
                     layoutManager = LinearLayoutManager(this.context)
                     adapter = recipiesAdapter
                 }
-
             })
         } else {
             txtFilter.text = "Filtered by: $cat"
-            recipiesModelView.getRecipiesByCat(cat).observe(viewLifecycleOwner, Observer {
-                recipiesAdapter.setRecipieList(it)
+            recipiesModelView.getRecipiesByCat(cat).observe(viewLifecycleOwner, Observer { recipes ->
+                // Filtrar las recetas según el texto ingresado en el SearchView
+                val filteredRecipes = filterRecipesBySearchQuery(recipes, searchView.query.toString())
 
+                shimmerFrameLayout.stopShimmer()
+                shimmerFrameLayout.visibility = View.GONE
+                recycler.visibility = View.VISIBLE
+                add.visibility = View.VISIBLE
+
+                recipiesAdapter.setRecipieList(filteredRecipes)
                 recycler.apply {
                     layoutManager = LinearLayoutManager(this.context)
                     adapter = recipiesAdapter
                 }
-
             })
         }
 
-        val add = view.findViewById<CardView>(R.id.btnAdd)
+        // Implementar búsqueda en tiempo real
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // No es necesario hacer nada aquí ya que estamos filtrando en tiempo real
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Filtrar las recetas cuando el texto cambia
+                recipiesModelView.getRecipies().observe(viewLifecycleOwner, Observer { recipes ->
+                    val filteredRecipes = filterRecipesBySearchQuery(recipes, newText ?: "")
+                    recipiesAdapter.setRecipieList(filteredRecipes)
+                })
+                return true
+            }
+        })
+
+
         add.setOnClickListener {
             casosUsoAtivities.callAdd()
         }
 
-        recipiesAdapter.setOnRecipieClickListener(object : RecipiesAdapter.OnRecipieClickListener{
+        // Configurar el listener de clics en recetas
+        recipiesAdapter.setOnRecipieClickListener(object : RecipiesAdapter.OnRecipieClickListener {
             override fun onRecipieSelected(position: Int, recipies: List<RecipiesModel>) {
                 val intent = Intent(activity, RecipieActivity::class.java)
                 intent.putExtra("id", recipies[position].id)
                 activity!!.startActivity(intent)
             }
-
         })
 
         return view
-
     }
+
+    // Función para filtrar recetas según el texto de búsqueda
+    private fun filterRecipesBySearchQuery(recipes: List<RecipiesModel>, query: String): List<RecipiesModel> {
+        return recipes.filter { it.name.contains(query, ignoreCase = true) }
+    }
+
+
 
     companion object {
         /**
