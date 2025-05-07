@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Estilo base para MaterialButton -->
+    <style name="BaseMaterialButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:backgroundTint">#FF9800</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
+
+    <!-- Estilo para botón primario -->
+    <style name="Button_Primary" parent="BaseMaterialButton">
+        <item name="android:backgroundTint">#FF9800</item>
+    </style>
+
+    <!-- Estilo para botón secundario -->
+    <style name="Button_Secondary" parent="BaseMaterialButton">
+        <item name="android:backgroundTint">#FFFFFF</item>
+        <item name="android:textColor">#FF9800</item>
+    </style>
+
+    <style name="Text_base">
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <!--
+    <style name="Button_Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="cornerRadius">15dp</item>
+    </style>
+
+    <style name="Button_Secondary" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/Priamry</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">15dp</item>
+    </style> -->
+</resources>

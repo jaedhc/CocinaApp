@@ -141,7 +141,7 @@ class CategoriesFragment : Fragment() {
                     editor.putString("photo", photo)
                     editor.apply()
 
-                    nameTxt?.text = "Welcome $name"
+                    nameTxt?.text = "Hi $name"
 
                     Glide.with(this)
                         .load(photo)

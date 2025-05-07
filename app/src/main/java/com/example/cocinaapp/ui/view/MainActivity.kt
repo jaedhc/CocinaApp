@@ -3,6 +3,9 @@ package com.example.cocinaapp.ui.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.cocinaapp.R
 import com.example.cocinaapp.databinding.ActivityMainBinding
 import com.example.cocinaapp.usecases.activities
@@ -18,6 +21,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_main3)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -38,6 +49,5 @@ class MainActivity : AppCompatActivity() {
             val i = Intent(this, SignUpActivity::class.java)
             startActivity(i)
         }
-
     }
 }
